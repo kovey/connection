@@ -6,6 +6,7 @@
         "framework",
         "kovey",
         "connection",
+        "pool",
         "php"
     ],
     "license": "Apache-2.0",

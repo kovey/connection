@@ -11,7 +11,7 @@
  */
 namespace Kovey\Connection;
 
-use Kovey\Connection\PoolInterface;
+use Kovey\Connection\Pool\PoolInterface;
 use Kovey\Db\DbInterface;
 use Kovey\Redis\RedisInterface;
 
@@ -20,16 +20,16 @@ class Pool
     /**
      * @description pool
      *
-     * @var PortInterface
+     * @var PoolInterface
      */
-    private PortInterface $pool;
+    private PoolInterface $pool;
 
     /**
      * @description connection
      *
      * @var Redis | Mysql
      */
-    private RedisInterface | DbInterface $database;
+    private RedisInterface | DbInterface $connection;
 
     /**
      * @description construct
@@ -41,17 +41,17 @@ class Pool
     public function __construct(PoolInterface $pool)
     {
         $this->pool = $pool;
-        $this->database = $this->pool->getDatabase();
+        $this->connection = $this->pool->pop();
     }
 
     /**
      * @description connection
      *
-     * @return mixed
+     * @return RedisInterface | DbInterface
      */
-    public function getDatabase()
+    public function getConnection() : RedisInterface | DbInterface
     {
-        return $this->database;
+        return $this->connection;
     }
 
     /**
@@ -61,12 +61,12 @@ class Pool
      */
     public function __destruct()
     {
-        if (!$this->pool
-            || empty($this->database)
+        if (empty($this->pool)
+            || empty($this->connection)
         ) {
             return;
         }
 
-        $this->pool->put($this->database);
+        $this->pool->put($this->connection);
     }
 }

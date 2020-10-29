@@ -12,94 +12,49 @@
 namespace Kovey\Connection\Pool;
 
 use Kovey\Redis\Redis\Redis as RDS;
+use Kovey\Db\DbInterface;
+use Kovey\Redis\RedisInterface;
 
-class Redis implements PoolInterface
+class Redis extends Base
 {
+    /**
+     * @description pool name
+     *
+     * @var string
+     */
     const POOL_NAME = 'pool_redis';
-
-    private $pool;
-
-    private $min;
-
-    private $max;
-
-    private $count;
-
-    private $conf;
-
-    private $errors;
-
-    public function __construct(Array $pool, Array $conf)
+    
+    /**
+     * @description init connection
+     *
+     * @return DbInterface | RedisInterface
+     */
+    protected function initConnection() : DbInterface | RedisInterface
     {
-        $this->min = $pool['min'];
-        $this->max = $pool['max'];
-        $this->pool = new \chan($this->max);
-        $this->conf = $conf;
-        $this->errors = array();
-        $this->count = 0;
-    }
-
-    public function init()
-    {
-        for ($i = 0; $i < $this->min; $i ++) {
-            $redis = new RDS($this->conf);
-
-            if (!$redis->connect()) {
-                $this->errors[] = $redis->getError();
-                continue;
-            }
-
-            $this->put($redis);
-            $this->count ++;
-        }
-    }
-
-    public function isEmpty() : bool
-    {
-        $this->pool->isEmpty();
-    }
-
-    public function put($redis)
-    {
-        if (empty($redis)) {
-            return;
-        }
-
-        $this->pool->push($redis);
-    }
-
-    public function getDatabase()
-    {
-        $redis = $this->pool->pop(0.1);
-        if ($redis) {
-            return $redis;
-        }
-
-        if ($this->count >= $this->max) {
-            return false;
-        }
-
-        $this->errors = array();
         $redis = new RDS($this->conf);
         if (!$redis->connect()) {
             $this->errors[] = $redis->getError();
             return false;
         }
 
-        $this->count ++;
         return $redis;
     }
-
-    public function getErrors() : Array
-    {
-        return $this->errors;
-    }
-
+    
+    /**
+     * @description 获取链接池写名称
+     *
+     * @return string
+     */
     public static function getWriteName() : string
     {
         return self::POOL_NAME . '_write';
     }
 
+    /**
+     * @description 获取链接池读名称
+     *
+     * @return string
+     */
     public static function getReadName() : string
     {
         return self::POOL_NAME . '_read';

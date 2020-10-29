@@ -13,6 +13,7 @@ namespace Kovey\Connection\Read;
 
 use Kovey\Connection\Pool\Redis as RD;
 use Kovey\Connection\Pool;
+use Kovey\Connection\AppInterface;
 
 class Redis extends Pool
 {
@@ -25,7 +26,7 @@ class Redis extends Pool
      *
      * @return Redis
      */
-    public function __construct($app, $partition = 0)
+    public function __construct(AppInterface $app, int $partition = 0)
     {
         parent::__construct($app->getPool(RD::getReadName(), $partition));
     }

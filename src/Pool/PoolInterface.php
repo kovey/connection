@@ -14,6 +14,9 @@
  */
 namespace Kovey\Connection\Pool;
 
+use Kovey\Db\DbInterface;
+use Kovey\Redis\RedisInterface;
+
 interface PoolInterface
 {
 	/**
@@ -35,14 +38,14 @@ interface PoolInterface
 	 *
 	 * @return null
 	 */
-	public function put($db);
+	public function put(DbInterface | RedisInterface $db);
 
 	/**
 	 * @description 从连接池中获取连接
 	 *
-	 * @return mixed
+	 * @return DbInterface | RedisInterface
 	 */
-	public function getDatabase();
+	public function pop() : DbInterface | RedisInterface | bool;
 
 	/**
 	 * @description 获取错误
