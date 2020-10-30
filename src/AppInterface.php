@@ -24,7 +24,7 @@ Interface AppInterface
      *
      * @return PoolInterface
      */
-    public function getPool(string $name, int $partition = 0) : PoolInterface;
+    public function getPool(string $name, int $partition = 0) : ?PoolInterface;
 
     /**
      * @description register pool
