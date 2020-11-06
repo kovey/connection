@@ -11,7 +11,7 @@
  */
 namespace Kovey\Connection\Write;
 
-use Kovey\Pool\Redis as RD;
+use Kovey\Connection\Pool\Redis as RD;
 use Kovey\Connection\Pool;
 use Kovey\Connection\AppInterface;
 

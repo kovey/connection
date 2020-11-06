@@ -11,7 +11,7 @@
  */
 namespace Kovey\Connection\Read;
 
-use Kovey\Pool\Mysql as MQ;
+use Kovey\Connection\Pool\Mysql as MQ;
 use Kovey\Connection\Pool;
 use Kovey\Connection\AppInterface;
 
