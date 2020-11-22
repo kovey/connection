@@ -14,6 +14,7 @@ namespace Kovey\Connection;
 use Kovey\Connection\Pool\PoolInterface;
 use Kovey\Db\DbInterface;
 use Kovey\Redis\RedisInterface;
+use Kovey\Db\Exception\DbException;
 
 class Pool
 {
@@ -42,6 +43,9 @@ class Pool
     {
         $this->pool = $pool;
         $this->connection = $this->pool->pop();
+        if (empty($this->connection)) {
+            throw new DbException('pool is empty', 1012);
+        }
     }
 
     /**
