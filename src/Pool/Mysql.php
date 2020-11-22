@@ -27,7 +27,7 @@ class Mysql extends Base
      *
      * @return DbInterface | RedisInterface
      */
-    protected function initConnection() : DbInterface | RedisInterface
+    protected function initConnection() : DbInterface | RedisInterface | bool
     {
         $db = new MSQ($this->conf);
         if (!$db->connect()) {

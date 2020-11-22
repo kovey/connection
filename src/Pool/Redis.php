@@ -29,7 +29,7 @@ class Redis extends Base
      *
      * @return DbInterface | RedisInterface
      */
-    protected function initConnection() : DbInterface | RedisInterface
+    protected function initConnection() : DbInterface | RedisInterface | bool
     {
         $redis = new RDS($this->conf);
         if (!$redis->connect()) {

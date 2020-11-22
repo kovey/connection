@@ -146,7 +146,7 @@ abstract class Base implements PoolInterface
     /**
      * @description init connection
      *
-     * @return DbInterface | RedisInterface
+     * @return DbInterface | RedisInterface | bool
      */
-    abstract protected function initConnection() : DbInterface | RedisInterface;
+    abstract protected function initConnection() : DbInterface | RedisInterface | bool;
 }
