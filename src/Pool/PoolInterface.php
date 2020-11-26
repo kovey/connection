@@ -19,40 +19,40 @@ use Kovey\Redis\RedisInterface;
 
 interface PoolInterface
 {
-	/**
-	 * @description 初始化连接池
-	 *
-	 * @return null
-	 */
-	public function init();
+    /**
+     * @description 初始化连接池
+     *
+     * @return null
+     */
+    public function init();
 
-	/**
-	 * @description 检测连接池是否为空
-	 *
-	 * @return bool
-	 */
-	public function isEmpty() : bool;
+    /**
+     * @description 检测连接池是否为空
+     *
+     * @return bool
+     */
+    public function isEmpty() : bool;
 
-	/**
-	 * @description 放回连接池
-	 *
-	 * @return null
-	 */
-	public function put(DbInterface | RedisInterface $db);
+    /**
+     * @description 放回连接池
+     *
+     * @return null
+     */
+    public function put(DbInterface | RedisInterface $db);
 
-	/**
-	 * @description 从连接池中获取连接
-	 *
-	 * @return DbInterface | RedisInterface
-	 */
-	public function pop() : DbInterface | RedisInterface | bool;
+    /**
+     * @description 从连接池中获取连接
+     *
+     * @return DbInterface | RedisInterface
+     */
+    public function pop() : DbInterface | RedisInterface | bool;
 
-	/**
-	 * @description 获取错误
-	 *
-	 * @return Array
-	 */
-	public function getErrors() : Array;
+    /**
+     * @description 获取错误
+     *
+     * @return Array
+     */
+    public function getErrors() : Array;
 
     /**
      * @description 获取链接池写名称

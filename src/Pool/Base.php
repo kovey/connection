@@ -69,11 +69,11 @@ abstract class Base implements PoolInterface
         $this->count = 0;
     }
 
-	/**
-	 * @description 初始化连接池
-	 *
-	 * @return null
-	 */
+    /**
+     * @description 初始化连接池
+     *
+     * @return null
+     */
     public function init()
     {
         for ($i = 0; $i < $this->min; $i ++) {
@@ -87,31 +87,31 @@ abstract class Base implements PoolInterface
         }
     }
 
-	/**
-	 * @description 检测连接池是否为空
-	 *
-	 * @return bool
-	 */
+    /**
+     * @description 检测连接池是否为空
+     *
+     * @return bool
+     */
     public function isEmpty() : bool
     {
         return $this->pool->isEmpty();
     }
 
-	/**
-	 * @description 放回连接池
-	 *
-	 * @return null
-	 */
+    /**
+     * @description 放回连接池
+     *
+     * @return null
+     */
     public function put(DbInterface | RedisInterface $db)
     {
         $this->pool->push($db);
     }
 
-	/**
-	 * @description 从连接池中获取连接
-	 *
-	 * @return DbInterface | RedisInterface
-	 */
+    /**
+     * @description 从连接池中获取连接
+     *
+     * @return DbInterface | RedisInterface
+     */
     public function pop() : DbInterface | RedisInterface | bool
     {
         $db = $this->pool->pop(1);
@@ -133,11 +133,11 @@ abstract class Base implements PoolInterface
         return $db;
     }
 
-	/**
-	 * @description 获取错误
-	 *
-	 * @return Array
-	 */
+    /**
+     * @description 获取错误
+     *
+     * @return Array
+     */
     public function getErrors() : Array
     {
         return $this->errors;
