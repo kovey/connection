@@ -1,10 +1,6 @@
 <?php
 /**
- *
- * @description 连接池接口
- * 连接池
- * swoole中，在work中使用连接池，每个进程是不共享的
- * 因为协程的channel不共享
+ * @description pool interface
  *
  * @package     Pool
  *
@@ -20,49 +16,49 @@ use Kovey\Redis\RedisInterface;
 interface PoolInterface
 {
     /**
-     * @description 初始化连接池
+     * @description init pool
      *
-     * @return null
+     * @return void
      */
-    public function init();
+    public function init() : void;
 
     /**
-     * @description 检测连接池是否为空
+     * @description is empty
      *
      * @return bool
      */
     public function isEmpty() : bool;
 
     /**
-     * @description 放回连接池
+     * @description put pool
      *
-     * @return null
+     * @return void
      */
-    public function put(DbInterface | RedisInterface $db);
+    public function put(DbInterface | RedisInterface $db) : void;
 
     /**
-     * @description 从连接池中获取连接
+     * @description pop pool
      *
      * @return DbInterface | RedisInterface
      */
     public function pop() : DbInterface | RedisInterface | bool;
 
     /**
-     * @description 获取错误
+     * @description get errors
      *
      * @return Array
      */
     public function getErrors() : Array;
 
     /**
-     * @description 获取链接池写名称
+     * @description get write name
      *
      * @return string
      */
     public static function getWriteName() : string;
  
     /**
-     * @description 获取链接池读名称
+     * @description get read name
      *
      * @return string
      */

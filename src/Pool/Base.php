@@ -1,8 +1,8 @@
 <?php
 /**
- * @description mysql pool
+ * @description pool base
  *
- * @package
+ * @package Connection\Pool
  *
  * @author kovey
  *
@@ -70,11 +70,11 @@ abstract class Base implements PoolInterface
     }
 
     /**
-     * @description 初始化连接池
+     * @description init
      *
-     * @return null
+     * @return void
      */
-    public function init()
+    public function init() : void
     {
         for ($i = 0; $i < $this->min; $i ++) {
             $db = $this->initConnection();
@@ -88,7 +88,7 @@ abstract class Base implements PoolInterface
     }
 
     /**
-     * @description 检测连接池是否为空
+     * @description is empty
      *
      * @return bool
      */
@@ -98,17 +98,17 @@ abstract class Base implements PoolInterface
     }
 
     /**
-     * @description 放回连接池
+     * @description put pool
      *
-     * @return null
+     * @return void
      */
-    public function put(DbInterface | RedisInterface $db)
+    public function put(DbInterface | RedisInterface $db) : void
     {
         $this->pool->push($db);
     }
 
     /**
-     * @description 从连接池中获取连接
+     * @description pop data
      *
      * @return DbInterface | RedisInterface
      */
@@ -134,7 +134,7 @@ abstract class Base implements PoolInterface
     }
 
     /**
-     * @description 获取错误
+     * @description get errors
      *
      * @return Array
      */

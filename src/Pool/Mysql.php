@@ -39,7 +39,7 @@ class Mysql extends Base
     }
 
     /**
-     * @description 获取链接池写名称
+     * @description get write name
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class Mysql extends Base
     }
 
     /**
-     * @description 获取链接池读名称
+     * @description get read name
      *
      * @return string
      */

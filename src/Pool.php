@@ -1,6 +1,6 @@
 <?php
 /**
- * @description 连接池
+ * @description connection pool
  *
  * @package Connection
  *
