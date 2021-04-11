@@ -16,7 +16,7 @@ use Kovey\Db\DbInterface;
 use Kovey\Redis\RedisInterface;
 use Kovey\Db\Exception\DbException;
 
-class Pool
+class Pool implements ManualCollectInterface
 {
     /**
      * @description pool
@@ -31,6 +31,13 @@ class Pool
      * @var Redis | Mysql
      */
     private RedisInterface | DbInterface $connection;
+
+    /**
+     * @description is collect
+     *
+     * @var bool
+     */
+    private bool $isCollected = false;
 
     /**
      * @description construct
@@ -59,12 +66,33 @@ class Pool
     }
 
     /**
+     * @description collect connection
+     *
+     * @return void
+     */
+    public function collect() : void
+    {
+        if (empty($this->pool)
+            || empty($this->connection)
+        ) {
+            return;
+        }
+
+        $this->pool->put($this->connection);
+        $this->isCollected = true;
+    }
+
+    /**
      * @description destruct
      *
      * @return null
      */
     public function __destruct()
     {
+        if ($this->isCollected) {
+            return;
+        }
+
         if (empty($this->pool)
             || empty($this->connection)
         ) {
