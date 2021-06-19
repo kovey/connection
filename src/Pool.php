@@ -72,10 +72,23 @@ class Pool implements ManualCollectInterface
      */
     public function collect() : void
     {
+        if ($this->isCollected) {
+            return;
+        }
+
         if (empty($this->pool)
             || empty($this->connection)
         ) {
             return;
+        }
+
+        try {
+            if ($this->connection instanceof DbInterface) {
+                if ($this->connection->inTransaction()) {
+                    $this->connection->rollBack();
+                }
+            }
+        } catch (\Throwable $e) {
         }
 
         $this->pool->put($this->connection);
@@ -89,16 +102,6 @@ class Pool implements ManualCollectInterface
      */
     public function __destruct()
     {
-        if ($this->isCollected) {
-            return;
-        }
-
-        if (empty($this->pool)
-            || empty($this->connection)
-        ) {
-            return;
-        }
-
-        $this->pool->put($this->connection);
+        $this->collect();
     }
 }
