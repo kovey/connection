@@ -65,6 +65,8 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function getConnection() : RedisInterface | DbInterface
     {
+        $this->initConnection();
+
         return $this->connection;
     }
 
