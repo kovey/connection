@@ -23,7 +23,18 @@ class Redis extends Base
      * @var string
      */
     const POOL_NAME = 'pool_redis';
+
     
+    /**
+     * @description pool name write
+     */
+    const POOL_NAME_WRITE = 'pool_redis_write';
+
+    /**
+     * @description pool name read
+     */
+    const POOL_NAME_READ = 'pool_redis_read';
+
     /**
      * @description init connection
      *
@@ -47,7 +58,7 @@ class Redis extends Base
      */
     public static function getWriteName() : string
     {
-        return self::POOL_NAME . '_write';
+        return self::POOL_NAME_WRITE;
     }
 
     /**
@@ -57,6 +68,6 @@ class Redis extends Base
      */
     public static function getReadName() : string
     {
-        return self::POOL_NAME . '_read';
+        return self::POOL_NAME_READ;
     }
 }

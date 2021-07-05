@@ -23,6 +23,16 @@ class Mysql extends Base
     const POOL_NAME = 'pool_mysql';
 
     /**
+     * @description pool name write
+     */
+    const POOL_NAME_WRITE = 'pool_mysql_write';
+
+    /**
+     * @description pool name read
+     */
+    const POOL_NAME_READ = 'pool_mysql_read';
+
+    /**
      * @description init connection
      *
      * @return DbInterface | RedisInterface
@@ -45,7 +55,7 @@ class Mysql extends Base
      */
     public static function getWriteName() : string
     {
-        return self::POOL_NAME . '_write';
+        return self::POOL_NAME_WRITE;
     }
 
     /**
@@ -55,6 +65,6 @@ class Mysql extends Base
      */
     public static function getReadName() : string
     {
-        return self::POOL_NAME . '_read';
+        return self::POOL_NAME_READ;
     }
 }
