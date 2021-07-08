@@ -170,7 +170,7 @@ class Pool implements ManualCollectInterface, DbInterface
     public function rollBack() : bool
     {
         $this->checkDatabase();
-        return $this->connection()->rollBack();
+        return $this->connection->rollBack();
     }
 
     /**
