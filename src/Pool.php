@@ -348,7 +348,7 @@ class Pool implements ManualCollectInterface, DbInterface
     {
         $this->initConnection();
         if (!$this->connection instanceof RedisInterface) {
-            throw new DbException('connection is not instanceof RedisInterface');
+            throw new DbException('connection is not instanceof RedisInterface', 1001);
         }
     }
 
