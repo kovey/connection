@@ -12,6 +12,7 @@
 namespace Kovey\Connection;
 
 use Kovey\Connection\Pool\PoolInterface;
+use Kovey\Connection\Pool\Redis;
 use Kovey\Db\DbInterface;
 use Kovey\Redis\RedisInterface;
 use Kovey\Db\Exception\DbException;
@@ -47,6 +48,13 @@ class Pool implements ManualCollectInterface, DbInterface
     private bool $isCollected = false;
 
     /**
+     * @description is redis
+     *
+     * @var bool
+     */
+    private bool $isRedis = false;
+
+    /**
      * @description construct
      *
      * @param PortInterface $pool
@@ -56,6 +64,7 @@ class Pool implements ManualCollectInterface, DbInterface
     public function __construct(PoolInterface $pool)
     {
         $this->pool = $pool;
+        $this->isRedis = $this->pool instanceof Redis;
     }
 
     /**
@@ -105,6 +114,16 @@ class Pool implements ManualCollectInterface, DbInterface
         }
     }
 
+    private function checkConnection() : void
+    {
+        if ($this->isRedis) {
+            $this->checkRedis();
+            return;
+        }
+
+        $this->checkDatabase();
+    }
+
     /**
      * @description connect to server
      *
@@ -112,7 +131,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function connect() : bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->connect();
     }
 
@@ -123,7 +142,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function getError() : string
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->getError();
     }
 
@@ -136,7 +155,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function query(string $sql) : Array
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->query($sql);
     }
 
@@ -147,7 +166,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function commit() : bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->commit();
     }
 
@@ -158,7 +177,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function beginTransaction() : bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->beginTransaction();
     }
 
@@ -169,7 +188,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function rollBack() : bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->rollBack();
     }
 
@@ -190,7 +209,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function fetchRow(string $table, Array | Where $condition, Array $columns = array(), string $forUpdateType = Type::FOR_UPDATE_NO) : Array | bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->fetchRow($table, $condition, $columns, $forUpdateType);
     }
 
@@ -209,7 +228,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function fetchAll(string $table, Array | Where $condition, Array $columns = array()) : array
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->fetchAll($table, $condition, $columns);
     }
 
@@ -222,7 +241,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function update(Update $update) : int
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->update($update);
     }
 
@@ -235,7 +254,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function insert(Insert $insert) : int
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->insert($insert);
     }
 
@@ -250,7 +269,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function select(Select $select, int $type = Select::ALL) : Array | bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->select($select, $type);
     }
 
@@ -266,7 +285,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function batchInsert(BatchInsert $batchInsert) : int
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->batchInsert($batchInsert);
     }
 
@@ -281,7 +300,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function delete(Delete $delete) : int
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->delete($delete);
     }
 
@@ -300,7 +319,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function transaction(callable $fun, $finally, ...$params) : bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->transaction($fun, $finally, ...$params);
     }
 
@@ -313,9 +332,9 @@ class Pool implements ManualCollectInterface, DbInterface
      *
      * @throws DbException
      */
-    public function exec(string $sql) : int
+    public function exec(string $sql = '') : int
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->exec($sql);
     }
 
@@ -326,7 +345,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function inTransaction() : bool
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->inTransaction();
     }
 
@@ -337,7 +356,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function getLastInsertId() : int
     {
-        $this->checkDatabase();
+        $this->checkConnection();
         return $this->connection->getLastInsertId();
     }
 
@@ -363,7 +382,7 @@ class Pool implements ManualCollectInterface, DbInterface
      */
     public function __call(string $method, Array $params) : mixed
     {
-        $this->checkRedis();
+        $this->checkConnection();
         return $this->connection->$method(...$params);
     }
 
