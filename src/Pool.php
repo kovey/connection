@@ -335,7 +335,11 @@ class Pool implements ManualCollectInterface, DbInterface
     public function exec(string $sql = '') : int
     {
         $this->checkConnection();
-        return $this->connection->exec($sql);
+        if (!$this->isRedis) {
+            return $this->connection->exec($sql);
+        }
+
+        return $this->connection->exec();
     }
 
     /**
