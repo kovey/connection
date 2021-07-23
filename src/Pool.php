@@ -339,7 +339,12 @@ class Pool implements ManualCollectInterface, DbInterface
             return $this->connection->exec($sql);
         }
 
-        return $this->connection->exec();
+        $result = $this->connection->exec();
+        if (empty($result)) {
+            return 0;
+        }
+
+        return count($result);
     }
 
     /**
