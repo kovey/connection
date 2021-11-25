@@ -23,8 +23,9 @@ use Kovey\Db\Sql\Select;
 use Kovey\Db\Sql\Delete;
 use Kovey\Db\Sql\BatchInsert;
 use Kovey\Db\Sql\Where;
+use Kovey\Library\Trace\TraceInterface;
 
-class Pool implements ManualCollectInterface, DbInterface
+class Pool implements ManualCollectInterface, DbInterface, TraceInterface
 {
     /**
      * @description pool
@@ -53,6 +54,10 @@ class Pool implements ManualCollectInterface, DbInterface
      * @var bool
      */
     private bool $isRedis = false;
+
+    private string $traceId;
+
+    private string $spanId;
 
     /**
      * @description construct
@@ -96,8 +101,8 @@ class Pool implements ManualCollectInterface, DbInterface
         }
 
         $this->connection = $connection;
-        $this->connection->traceId = $this->traceId ?? '';
-        $this->connection->spanId = $this->spanId ?? '';
+        $this->connection->setTraceId($this->traceId);
+        $this->connection->setSpanId($this->spanId);
     }
 
     /**
@@ -110,7 +115,7 @@ class Pool implements ManualCollectInterface, DbInterface
         $this->initConnection();
 
         if (!$this->connection instanceof DbInterface) {
-            throw new DbException('connection is not DbInterface');
+            throw new DbException('connection is not DbInterface', 1000);
         }
     }
 
@@ -433,5 +438,25 @@ class Pool implements ManualCollectInterface, DbInterface
     public function __destruct()
     {
         $this->collect();
+    }
+
+    public function setTraceId(string $traceId) : void
+    {
+        $this->traceId = $traceId;
+    }
+
+    public function setSpanId(string $spanId) : void
+    {
+        $this->spanId = $spanId;
+    }
+
+    public function getTraceId() : string
+    {
+        return $this->traceId;
+    }
+
+    public function getSpanId() : string
+    {
+        return $this->spanId;
     }
 }
